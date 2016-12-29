@@ -1,0 +1,113 @@
+var MongoClient = require('mongodb').MongoClient;
+var url = 'mongodb://localhost:27017/test';
+var path = require("path");
+
+exports.homePage = function (req, res) {
+ res.sendFile(path.join(__dirname, '..', 'index.html'));
+};
+
+exports.helloWorld = function (req, res) {
+    res.send('Hello World');
+};
+
+exports.getUsers = function (req, res) {
+var mongo = require( '../db/mongo' );
+var db = mongo.getDb();
+var arr = [];
+var cursor =db.collection('user').find( );
+    cursor.each(function(err, doc) {  
+        if(err) console.log("cannot parse the cursor");
+        if (doc != null) {
+            arr.push(doc);
+        } else {
+            console.log("success");
+            res.json(arr);
+        }
+   });
+};
+
+exports.getUser = function (req, res) {
+var mongo = require( '../db/mongo' );
+var db = mongo.getDb();
+var cursor =db.collection('user').find({"id":Number(req.params.id)});
+    cursor.each(function(err, doc) {  
+        if(err) console.log("cannot parse the cursor");
+	res.setHeader('Access-Control-Allow-Origin', 'null');
+
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    res.setHeader('Access-Control-Allow-Credentials', true);
+        if (doc != null) {
+            res.json(doc);
+	    return false;
+        } else {
+	    res.json({"error":"no  match found"});
+        }
+   });
+};
+
+exports.addUser = function (req, res) {
+      var mongo = require( '../db/mongo' );
+      var db = mongo.getDb();
+      db.collection('user').insertOne( {
+          "id" : Number(req.body.id),
+          "name": req.body.name,
+          "age": Number(req.body.age)
+   }, function(err, result) {
+     if(err) console.log("there was an error inserting the user");
+  });
+ res.json({"success":"user added successfully"});
+};
+
+exports.updateUser = function (req, res) {
+var mongo = require( '../db/mongo' );
+var db = mongo.getDb();
+      db.collection('user').update(
+      { "id" : Number(req.body.id)},
+        {"id":Number(req.body.id),
+         "name": req.body.name,
+         "age": Number(req.body.age)
+	}, function(err, results) {
+      if(err) console.log("there was an error updating the user");
+      
+   });
+
+ res.json({"success":"user updated successfully"});
+};
+
+exports.deleteUser = function (req, res) {
+var mongo = require( '../db/mongo' );
+var db = mongo.getDb();
+      db.collection('user').deleteOne(
+        {"id":Number(req.params.id)}
+      , function(err, results) {
+      if(err) console.log("there was an error updating the user");
+   });
+ res.json({"success":"user deleted successfully"});
+};
+
+exports.findAndUpdate = function (req, res) {
+var mongo = require( '../db/mongo' );
+var db = mongo.getDb();
+      db.collection('user').findOne({"id":Number(req.params.id)}, function(err, thing)
+                    {                           
+                       if(err) res.json({"error":"no  match found"}); 
+                       else {
+                            db.collection('user').update(
+                            	thing,
+                            	{"id":thing.id,
+                            	"name": "rohan",
+                            	"age": thing.age
+	                    }, function(err, results) {
+                            	if(err) console.log("there was an error updating the user");
+                            });
+                           	res.json({"success":"user updated successfully"});
+                           }
+                    });
+};
