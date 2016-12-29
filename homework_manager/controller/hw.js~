@@ -1,18 +1,11 @@
 var MongoClient = require('mongodb').MongoClient;
 var path = require("path");
 var mongo = require( '../db/mongo' );
- var fs = require("fs");
-
-exports.home = function(req, res) {
-        fs.readFile(__dirname + '/../public/index.html', 'utf8', function(err, text){
-            res.send(text);
-        })
-    };
 
 exports.helloWorld = function (req, res) {
-    res.sendFile('public/index.html');
+    res.send('Hello World');
 };
-//returns the pending homework in JSON format
+
 exports.gethws = function (req, res) {
 var db = mongo.getDb();
 var arr = [];
@@ -26,7 +19,7 @@ var cursor =db.collection('hwdata').find({"status":"pending"});
         }
    });
 };
-//returns the done homework in JSON format
+
 exports.getdonehws = function (req, res) {
 var db = mongo.getDb();
 var arr = [];
@@ -40,7 +33,7 @@ var cursor =db.collection('hwdata').find({"status":"done"});
         }
    });
 };
-//returns if homework exist or not
+
 exports.gethw = function (req, res) {
 var db = mongo.getDb();
 var cursor =db.collection('hwdata').find({"subject":String(req.params.subject)});
@@ -54,7 +47,7 @@ var cursor =db.collection('hwdata').find({"subject":String(req.params.subject)})
         }
    });
 };
-//post the form data
+
 exports.addhw = function (req, res) {
       var db = mongo.getDb();
       db.collection('hwdata').insertOne( {
@@ -69,7 +62,7 @@ exports.addhw = function (req, res) {
   });
 
 };
-//delete the homework
+
 exports.deletehw = function (req, res) {
 var db = mongo.getDb();
       db.collection('hwdata').deleteOne(

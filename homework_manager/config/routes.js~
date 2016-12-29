@@ -3,8 +3,6 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 
-//defining the routes
-
 module.exports = function(app) {
 	var hw = require('../controller/hw');
 	app.use(bodyParser.json());
@@ -14,6 +12,6 @@ module.exports = function(app) {
 	app.post('/addhw',hw.addhw);
 	app.get('/deletehw/:subject',hw.deletehw);
 	app.get('/donehw/:subject',hw.donehw);
-	app.get('/',hw.home);
+	app.get('/',hw.helloWorld);
 }
 
