@@ -12,10 +12,10 @@ This project was created for the students who have trouble managing their homewo
 
 Installation
 
-Create a node module via npm init.Then install the dependencies in package.json via npm install <package_name> --save.
-Enable enable cross origin resource sharing.
-then run the server via node server.js.
-open home.html.The application is ready to run.
+Clone the repository
+Install the application: `npm install`
+Start the server: `node server.js`
+View in browser at `http://localhost:8081`
 
 Author
 name - Rohan Kulshreshtha.
